@@ -1,3 +1,3 @@
 ## Existing Check
 
-This needs to be modified before it is ready for for use.
+Lots to do before this is ready for any usage
