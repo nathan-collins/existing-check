@@ -1,5 +1,9 @@
 ## Existing Check
 
+Firestore, Polymer 3 mixin to check for check for existing values.
+
+Firestore is case sensitive querying database so there are limitations for offline mode and `where` queries, this add another layer of validation and covers the issues that are created when querying.
+
 Lots to do before this is ready for any usage
 
 * Remove dependency to aroma helper
