@@ -6,3 +6,5 @@ Lots to do before this is ready for any usage
 * Rename method so they are clearly defined
 * Rename properties
 * Rename events so they are clearly defined
+* Refactor code
+* Add tests
