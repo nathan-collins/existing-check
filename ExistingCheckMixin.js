@@ -58,8 +58,8 @@ const ExistingCheckMixin = function(superClass) {
      */
     existingDataNameChanged(existingDataName) {
       this._createMethodObserver(
-          `populateExistingValues(existingCheck, ${existingDataName}.*, force)`,
-          true
+        `populateExistingValues(existingCheck, ${existingDataName}.*, force)`,
+        true
       );
     }
 
@@ -74,10 +74,10 @@ const ExistingCheckMixin = function(superClass) {
 
       let existingData = {};
 
-      existingCheck.forEach((field) => {
+      existingCheck.forEach(field => {
         let values;
 
-        values = tableData.base.map((existing) => {
+        values = tableData.base.map(existing => {
           return existing[field].toLowerCase().trim();
         });
 
@@ -86,7 +86,7 @@ const ExistingCheckMixin = function(superClass) {
       this.set('enabledExistingButtons', []);
 
       const allFields = Object.keys(existingData);
-      allFields.forEach((field) => {
+      allFields.forEach(field => {
         if (!this.enabledExistingButtons.includes(field)) {
           AromaHelper.prototype._fireEvent('disable-create-button', {}, true);
         }
@@ -130,7 +130,7 @@ const ExistingCheckMixin = function(superClass) {
       if (!values[field]) return false;
 
       return this.existingValues[field].includes(
-          values[this.existingCheckFieldConvert(field)].toLowerCase()
+        values[this.existingCheckFieldConvert(field)].toLowerCase()
       );
     }
 
@@ -160,11 +160,11 @@ const ExistingCheckMixin = function(superClass) {
       if (!existingValues) return;
       const existingValuesKeys = Object.keys(existingValues);
 
-      existingValuesKeys.forEach((key) => {
+      existingValuesKeys.forEach(key => {
         const removeExistingIndex = existingValues[key].findIndex(
-            (existingValue) => {
-              return existingValue === entity[key].toLowerCase();
-            }
+          existingValue => {
+            return existingValue === entity[key].toLowerCase();
+          }
         );
         if (removeExistingIndex !== -1) {
           existingValues[key].splice(removeExistingIndex, 1);
