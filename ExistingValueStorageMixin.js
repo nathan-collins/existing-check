@@ -61,7 +61,11 @@ const ExistingValueStorage = function(superClass) {
      */
     existingDataNameChanged(existingDataName) {
       this._createMethodObserver(
+<<<<<<< HEAD:ExistingValueStorageMixin.js
         `populateExistingValues(existingFields, ${existingDataName}.*, refreshCollections)`,
+=======
+        `populateExistingValues(existingCheck, ${existingDataName}.*, force)`,
+>>>>>>> master:ExistingCheckMixin.js
         true
       );
     }
@@ -77,10 +81,17 @@ const ExistingValueStorage = function(superClass) {
 
       let existingData = {};
 
+<<<<<<< HEAD:ExistingValueStorageMixin.js
       existingFields.forEach(field => {
         let values;
 
         values = this[this.collectionName].base.map(existing => {
+=======
+      existingCheck.forEach(field => {
+        let values;
+
+        values = tableData.base.map(existing => {
+>>>>>>> master:ExistingCheckMixin.js
           return existing[field].toLowerCase().trim();
         });
 
