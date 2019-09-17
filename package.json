@@ -25,6 +25,7 @@
     "trailingComma": "es5"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.6",
     "eslint": "^5.16.0",
     "eslint-config-google": "^0.10.0",
     "eslint-config-prettier": "^4.2.0",

@@ -1,45 +1,51 @@
 {
-  "extends": [
-    "airbnb",
-    "prettier",
-    "prettier/react",
-    "plugin:prettier/recommended",
-    "eslint-config-prettier"
-  ],
-  "plugins": ["prettier"],
-  "env": {
-    "browser": true,
-    "commonjs": true,
-    "es6": true,
-    "node": true,
-    "jest": true
-  },
+  "extends": ["eslint:recommended", "google"],
+  "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaFeatures": {
-      "ecmaVersion": 2018,
-      "jsx": true
-    },
+    "ecmaVersion": 6,
     "sourceType": "module"
   },
   "rules": {
+    "max-len": [2, { "code": 80, "tabWidth": 2, "ignoreUrls": true }],
     "no-console": "error",
-    "import/no-unresolved": "off",
-    "no-eval": "error",
-    "react/jsx-filename-extension": [
-      1,
-      {
-        "extensions": [".js", ".jsx"]
-      }
-    ],
-    "react/prefer-stateless-function": [1],
-    "prettier/prettier": [
+    "no-var": "error",
+    "semi": "error",
+    "strict": "error",
+    "no-trailing-spaces": "error",
+    "space-before-function-paren": "error",
+    "valid-jsdoc": [
       "error",
       {
-        "trailingComma": "es5",
-        "singleQuote": true,
-        "printWidth": 100,
-        "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\""
+        "requireReturn": false,
+        "prefer": {
+          "arg": "param",
+          "argument": "param",
+          "returns": "return"
+        },
+        "preferType": {
+          "boolean": "Boolean",
+          "number": "Number",
+          "string": "String",
+          "object": "Object",
+          "array": "Array"
+        }
       }
-    ]
+    ],
+    "no-useless-escape": "error",
+    "new-cap": ["error", { "capIsNewExceptions": ["Polymer"] }],
+    "linebreak-style": ["off"]
+  },
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "plugins": ["html"],
+  "globals": {
+    "customElements": true,
+    "HTMLImports": true,
+    "Polymer": true,
+    "ShadyDOM": true,
+    "ShadyCSS": true,
+    "JSCompiler_renameProperty": true
   }
 }
