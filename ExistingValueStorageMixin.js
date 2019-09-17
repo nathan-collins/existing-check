@@ -7,7 +7,7 @@
  * @param {Object} superClass PolymerElement
  * @return {Object} superClass
  */
-const ExistingValueStorage = superClass => {
+const ExistingValueStorageMixin = (superClass) => {
   return class extends superClass {
     /**
      */
@@ -61,8 +61,8 @@ const ExistingValueStorage = superClass => {
      */
     existingDataNameChanged(existingDataName) {
       this._createMethodObserver(
-        `populateExistingValues(existingFields, ${existingDataName}.*, refreshCollections)`,
-        true
+          `populateExistingValues(existingFields, ${existingDataName}.*, refreshCollections)`,
+          true
       );
     }
 
@@ -72,15 +72,15 @@ const ExistingValueStorage = superClass => {
      * @param {Boolean} refreshCollections Force the collections to be refreshed
      */
     populateExistingValues(
-      existingFields,
-      existingDataName,
-      refreshCollections
+        existingFields,
+        existingDataName,
+        refreshCollections
     ) {
       if (!existingFields || existingFields.length === 0) return;
       if (!refreshCollections) return;
       if (!this[this.collectionName] || !this[this.collectionName].base) return;
 
-      existingDataName.forEach(field => {
+      existingDataName.forEach((field) => {
         if (typeof field === 'object') {
           console.error('the field cannot be an array or object');
           return;
@@ -89,10 +89,10 @@ const ExistingValueStorage = superClass => {
 
       let existingData = {};
 
-      existingFields.forEach(field => {
+      existingFields.forEach((field) => {
         let values;
 
-        values = this[this.collectionName].base.map(existing => {
+        values = this[this.collectionName].base.map((existing) => {
           return existing[field].toLowerCase().trim();
         });
 
@@ -101,15 +101,23 @@ const ExistingValueStorage = superClass => {
       this.set('enabledExistingButtons', []);
 
       const allFields = Object.keys(existingData);
-      allFields.forEach(field => {
+      allFields.forEach((field) => {
         if (!this.enabledExistingButtons.includes(field)) {
-          AromaHelper.prototype._fireEvent('disable-create-button', {}, true);
+          this.dispatchEvent(
+              new CustomEvent('disable-create-button', {
+                detail: {},
+              })
+          );
         }
 
         if (existingData[field].length > 0) {
           // enable the create button
           this.push('enabledExistingButtons', field);
-          AromaHelper.prototype._fireEvent('enable-create-button', {}, true);
+          this.dispatchEvent(
+              new CustomEvent('enable-create-button', {
+                detail: {},
+              })
+          );
         }
       });
 
@@ -117,9 +125,13 @@ const ExistingValueStorage = superClass => {
 
       // this gets triggered far to often,
       // we need to debounce this or limit it only setting once.
-      AromaHelper.prototype._fireEvent('create-form-existing', {
-        existingFieldValues: this.existingValues,
-      });
+      this.dispatchEvent(
+          new CustomEvent('create-form-existing', {
+            detail: {
+              existingFieldValues: this.existingValues,
+            },
+          })
+      );
       this.set('refreshCollections', false);
     }
 
@@ -145,7 +157,7 @@ const ExistingValueStorage = superClass => {
       if (!values[field]) return false;
 
       return this.existingValues[field].includes(
-        values[this.existingCheckFieldConvert(field)].toLowerCase()
+          values[this.existingCheckFieldConvert(field)].toLowerCase()
       );
     }
 
@@ -175,11 +187,11 @@ const ExistingValueStorage = superClass => {
       if (!existingValues) return;
       const existingValuesKeys = Object.keys(existingValues);
 
-      existingValuesKeys.forEach(key => {
+      existingValuesKeys.forEach((key) => {
         const removeExistingIndex = existingValues[key].findIndex(
-          existingValue => {
-            return existingValue === entity[key].toLowerCase();
-          }
+            (existingValue) => {
+              return existingValue === entity[key].toLowerCase();
+            }
         );
         if (removeExistingIndex !== -1) {
           existingValues[key].splice(removeExistingIndex, 1);
@@ -191,4 +203,4 @@ const ExistingValueStorage = superClass => {
   };
 };
 
-export default ExistingValueStorage;
+export default ExistingValueStorageMixin;

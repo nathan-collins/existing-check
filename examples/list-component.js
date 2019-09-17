@@ -1,5 +1,5 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { existingValueStorageMixin } from '../ExistingValueStorageMixin.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import existingValueStorageMixin from '../ExistingValueStorageMixin.js';
 import '@polymer/polymer/lib/elements/dom-repeat.js';
 
 /**
@@ -11,6 +11,9 @@ import '@polymer/polymer/lib/elements/dom-repeat.js';
  *
  */
 class ListComponent extends existingValueStorageMixin(PolymerElement) {
+  /**
+   * @return {Object} Properties list
+   */
   static get properties() {
     return {
       collectionName: 'listValues',
@@ -48,6 +51,9 @@ class ListComponent extends existingValueStorageMixin(PolymerElement) {
     };
   }
 
+  /**
+   * @return {String} HTML markup
+   */
   static get template() {
     return html`
       <ul>

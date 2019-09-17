@@ -1,24 +1,30 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { existingValueStorageValidationMixin } from '../ExistingValueStorageValidationMixin.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+// eslint-disable-next-line
+import existingValueStorageValidationMixin from '../ExistingValueStorageValidationMixin.js';
 
 /**
- * `FormComponent` Form component example code
+ * `form-component` Form component example code
  *
  * @customElement
  * @polymer
  * @demo
- *
  */
 class FormComponent extends existingValueStorageValidationMixin(
-  PolymerElement
+    PolymerElement
 ) {
+  /**
+   * @return {Object} Properties list
+   */
   static get properties() {
     return {};
   }
 
+  /**
+   * @return {String} HTML
+   */
   static get template() {
     return html``;
   }
 }
 
-customElements.define('FormComponent', FormComponent);
+customElements.define('form-component', FormComponent);
