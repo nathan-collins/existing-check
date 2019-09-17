@@ -7,7 +7,7 @@
  * @param {Object} superClass PolymerElement
  * @return {Object} superClass
  */
-const ExistingValueStorage = function(superClass) {
+const ExistingValueStorage = superClass => {
   return class extends superClass {
     /**
      */
@@ -68,12 +68,24 @@ const ExistingValueStorage = function(superClass) {
 
     /**
      * @param {Array} existingFields Existing fields check
+     * @param {String} existingDataName Existing
      * @param {Boolean} refreshCollections Force the collections to be refreshed
      */
-    populateExistingValues(existingFields, refreshCollections) {
+    populateExistingValues(
+      existingFields,
+      existingDataName,
+      refreshCollections
+    ) {
       if (!existingFields || existingFields.length === 0) return;
       if (!refreshCollections) return;
       if (!this[this.collectionName] || !this[this.collectionName].base) return;
+
+      existingDataName.forEach(field => {
+        if (typeof field === 'object') {
+          console.error('the field cannot be an array or object');
+          return;
+        }
+      });
 
       let existingData = {};
 
