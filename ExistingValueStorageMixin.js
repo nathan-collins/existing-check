@@ -1,5 +1,3 @@
-import AromaHelper from '../../custom-components/aroma-helper/aroma-helper';
-
 /**
  * eslint-env es6
  * @polymer
@@ -9,13 +7,19 @@ import AromaHelper from '../../custom-components/aroma-helper/aroma-helper';
  * @param {Object} superClass PolymerElement
  * @return {Object} superClass
  */
-const ExistingCheckMixin = function(superClass) {
+const ExistingValueStorageMixin = (superClass) => {
   return class extends superClass {
     /**
-     *
      */
     static get properties() {
       return {
+        // Name of the collection data
+        collectionName: {
+          type: String,
+          value: 'tableData',
+        },
+
+        // Disable a button until all values are available
         enabledExistingButtons: {
           type: Array,
           value: () => {
@@ -23,31 +27,30 @@ const ExistingCheckMixin = function(superClass) {
           },
         },
 
-        existingCheck: {
+        // The field data to be retrieved
+        existingFields: {
           type: Array,
         },
 
         existingDataName: {
           type: String,
-          value: 'tableData',
         },
 
+        // All existing check values in flat arrays
         existingValues: {
           type: Object,
         },
 
-        force: {
+        // Force the collection to be pulled again
+        refreshCollections: {
           type: Boolean,
           value: false,
-        },
-
-        tableData: {
-          type: Array,
         },
       };
     }
 
     /**
+     * @return {Array} Observers for the existing check mixin
      */
     static get observers() {
       return ['existingDataNameChanged(existingDataName)'];
@@ -58,26 +61,38 @@ const ExistingCheckMixin = function(superClass) {
      */
     existingDataNameChanged(existingDataName) {
       this._createMethodObserver(
-          `populateExistingValues(existingCheck, ${existingDataName}.*, force)`,
+          `populateExistingValues(existingFields, ${existingDataName}.*, refreshCollections)`,
           true
       );
     }
 
     /**
-     * @param {Array} existingCheck Existing fields check
-     * @param {Array} tableData Table data
-     * @param {Boolean} force Force a refresh
+     * @param {Array} existingFields Existing fields check
+     * @param {String} existingDataName Existing
+     * @param {Boolean} refreshCollections Force the collections to be refreshed
      */
-    populateExistingValues(existingCheck, tableData, force = false) {
-      if (!existingCheck || existingCheck.length === 0) return;
-      if (!tableData || !tableData.base) return;
+    populateExistingValues(
+        existingFields,
+        existingDataName,
+        refreshCollections
+    ) {
+      if (!existingFields || existingFields.length === 0) return;
+      if (!refreshCollections) return;
+      if (!this[this.collectionName] || !this[this.collectionName].base) return;
+
+      existingDataName.forEach((field) => {
+        if (typeof field === 'object') {
+          console.error('the field cannot be an array or object');
+          return;
+        }
+      });
 
       let existingData = {};
 
-      existingCheck.forEach((field) => {
+      existingFields.forEach((field) => {
         let values;
 
-        values = tableData.base.map((existing) => {
+        values = this[this.collectionName].base.map((existing) => {
           return existing[field].toLowerCase().trim();
         });
 
@@ -88,32 +103,44 @@ const ExistingCheckMixin = function(superClass) {
       const allFields = Object.keys(existingData);
       allFields.forEach((field) => {
         if (!this.enabledExistingButtons.includes(field)) {
-          AromaHelper.prototype._fireEvent('disable-create-button', {}, true);
+          this.dispatchEvent(
+              new CustomEvent('disable-create-button', {
+                detail: {},
+              })
+          );
         }
 
         if (existingData[field].length > 0) {
           // enable the create button
           this.push('enabledExistingButtons', field);
-          AromaHelper.prototype._fireEvent('enable-create-button', {}, true);
+          this.dispatchEvent(
+              new CustomEvent('enable-create-button', {
+                detail: {},
+              })
+          );
         }
       });
 
-      this.set('existingValues', existingData);
+      this.set('existingFieldValues', existingData);
 
       // this gets triggered far to often,
       // we need to debounce this or limit it only setting once.
-      AromaHelper.prototype._fireEvent('create-form-existing', {
-        existingValues: this.existingValues,
-      });
-      this.set('force', false);
+      this.dispatchEvent(
+          new CustomEvent('create-form-existing', {
+            detail: {
+              existingFieldValues: this.existingValues,
+            },
+          })
+      );
+      this.set('refreshCollections', false);
     }
 
     /**
      * @param {Event} event Event
      */
     updateExistingCheck(event) {
-      if (this.tableData) {
-        this.set('force', true);
+      if (this[this.collectionName]) {
+        this.set('refreshCollections', true);
       }
     }
 
@@ -123,7 +150,7 @@ const ExistingCheckMixin = function(superClass) {
      * @return {Boolean} Check existing fields
      */
     validateExistingField(field, values) {
-      if (!this.existingCheck.includes(field) || !this.existingValues[field]) {
+      if (!this.existingFields.includes(field) || !this.existingValues[field]) {
         return;
       }
       if (!field || !values) return false;
@@ -176,4 +203,4 @@ const ExistingCheckMixin = function(superClass) {
   };
 };
 
-export default ExistingCheckMixin;
+export default ExistingValueStorageMixin;
